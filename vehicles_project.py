@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
+import plotly.express as px
 
 st.title("Análisis de")
 st.header('Vehiculos')
@@ -14,12 +15,12 @@ def cargar_datos():
 car_data = cargar_datos()
 
 st.subheader("Vista previa del dataset")
-st.dataframe(df.head(25))
+st.dataframe(car_data.head(25))
 
 # histograma
 if st.button('Construir histograma'):    
     st.write('Creación de un histograma para el conjunto de datos de anuncios de venta de coches')
-    hist = go.Figure(data=[go.Histogram(x='odometer')])
+    hist = go.Figure(data=[go.Histogram(x=car_data['odometer'])])
     hist.update_layout(title_text='Distribución del Odómetro')
     st.plotly_chart(hist, use_container_width=True)
 
@@ -35,10 +36,11 @@ cv_scatter = st.checkbox('Construir un gráfico de dispersión')
 
 if cv_hist: # si la casilla de verificación está seleccionada
     st.write('Construir un histograma de la condicion de los coches')
-    hist_fig = go.Figure(data=[go.Histogram(x='condition')])
+    hist_fig = go.Figure(data=[go.Histogram(x=car_data['condition'])])
     hist_fig.update_layout(title_text='Distribución de la condición de los coches')
     st.plotly_chart(hist_fig, use_container_width=True)
-    elif cv_scatter:
+
+if cv_scatter:
     st.write('Gráfico de dispersión de precios')
-    scatter_fig = px.scatter(car_data, x="model_year", y="price", color="paint_color", symbol="condition")
+    scatter_fig = px.scatter(car_data, x="cylinders", y="price", color="paint_color")
     st.plotly_chart(scatter_fig, use_container_width=True)
